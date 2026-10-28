@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rueda Taxonómica de la Cocreación Mediada por Tecnología e IA — Cordero, X. (2026)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+    .wheel-sector {
+      transition: filter 0.25s ease, opacity 0.25s ease;
+      cursor: pointer;
+    }
+    .wheel-sector:hover {
+      filter: brightness(0.97);
+    }
+    .tool-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3.5px 8px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+    .tool-chip:hover {
+      transform: translateY(-1.5px) scale(1.03);
+      box-shadow: 0 4px 8px rgba(15, 23, 42, 0.15);
+    }
+    .ai-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 7.5px;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      line-height: 1.15;
+      white-space: nowrap;
+    }
+    .ai-chip:hover {
+      transform: translateY(-1.5px) scale(1.04);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.18);
+    }
+    .sector-card {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 6px;
+      box-sizing: border-box;
+      user-select: none;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-6 px-3 md:px-8">
+
+  <!-- BARRA SUPERIOR DE ACCIONES E INSTRUCCIONES -->
+  <header class="w-full max-w-[1440px] mb-5 flex flex-col lg:flex-row items-center justify-between gap-4 bg-white px-6 py-4 rounded-2xl shadow-sm border border-slate-200 no-print">
+    <div>
+      <div class="flex items-center gap-2.5">
+        <span class="px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider bg-slate-900 text-sky-400 rounded-md">Taxonomía Aplicada</span>
+        <span class="text-xs font-semibold text-slate-500">Geometría Concéntrica Integrada • Enlaces Directos Activos</span>
+      </div>
+      <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight mt-1">
+        Rueda Taxonómica de la Cocreación Mediada por Tecnología e IA
+      </h1>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2.5">
+      <button onclick="filterDimension('all')" id="btn-all" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white shadow-sm transition hover:bg-slate-800">
+        Ver Rueda Completa
+      </button>
+      <button onclick="filterDimension('codiseno')" id="btn-codiseno" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-teal-50 text-teal-900 border border-teal-300 transition hover:bg-teal-100">
+        1. Co-diseño
+      </button>
+      <button onclick="filterDimension('cocreacion')" id="btn-cocreacion" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-50 text-blue-900 border border-blue-300 transition hover:bg-blue-100">
+        2. Cocreación y Decisiones
+      </button>
+      <button onclick="filterDimension('coevaluacion')" id="btn-coevaluacion" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-50 text-amber-900 border border-amber-300 transition hover:bg-amber-100">
+        3. Co-evaluación
+      </button>
+      <div class="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+      <button onclick="downloadHighResPNG()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold bg-sky-600 text-white shadow-sm hover:bg-sky-700 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Descargar Imagen HD (PNG)
+      </button>
+    </div>
+  </header>
+
+  <!-- LIENZO PRINCIPAL DE LA RUEDA TAXONÓMICA -->
+  <main class="w-full max-w-[1440px] bg-white rounded-3xl shadow-xl border border-slate-200/90 p-3 sm:p-6 md:p-8 flex flex-col items-center">
+    
+    <!-- Nota de interactividad -->
+    <div class="w-full flex flex-wrap items-center justify-between gap-2 pb-3 mb-2 border-b border-slate-100 text-xs text-slate-500 no-print">
+      <span class="flex items-center gap-1.5 font-medium">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <strong>Interactiva:</strong> Haz clic directamente sobre cualquier <strong>icono o herramienta</strong> dentro de los arcos de la rueda para ir a su sitio oficial.
+      </span>
+      <span class="font-semibold text-slate-700">Escala radial: Centro (Filosofía) → Anillo 1 (Dimensión) → Anillo 2 (Procesos y Productos) → Anillo 3 (Herramientas e IA)</span>
+    </div>
+
+    <!-- CONTENEDOR SVG RESPONSIVO DE ALTA PRECISIÓN -->
+    <div class="w-full overflow-x-auto flex justify-center">
+      <svg id="taxonomic-wheel-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1560" class="w-full max-w-[1360px] h-auto select-none" style="background-color: #ffffff; font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+        
+        <defs>
+          <filter id="wheel-drop-shadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.10"/>
+          </filter>
+          <filter id="core-shadow" x="-15%" y="-15%" width="130%" height="130%">
+            <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.28"/>
+          </filter>
+
+          <!-- TRAYECTORIAS CURVAS (TEXTPATHS) -->
+          <path id="arc-dim1-title" d="M 633.7 694.0 A 192 192 0 0 1 966.3 694.0" fill="none"/>
+          <path id="arc-dim1-sub"   d="M 651.0 704.0 A 172 172 0 0 1 949.0 704.0" fill="none"/>
+          <path id="arc-dim2-title" d="M 800.0 986.0 A 196 196 0 0 0 969.7 692.0" fill="none"/>
+          <path id="arc-dim2-sub"   d="M 800.0 964.0 A 174 174 0 0 0 950.7 703.0" fill="none"/>
+          <path id="arc-dim3-title" d="M 630.3 692.0 A 196 196 0 0 0 800.0 986.0" fill="none"/>
+          <path id="arc-dim3-sub"   d="M 649.3 703.0 A 174 174 0 0 0 800.0 964.0" fill="none"/>
+
+          <path id="arc-sec11-hdr" d="M 454.0 573.8 A 408 408 0 0 1 785.8 382.2" fill="none"/>
+          <path id="arc-sec12-hdr" d="M 814.2 382.2 A 408 408 0 0 1 1146.0 573.8" fill="none"/>
+          <path id="arc-sec21-hdr" d="M 1160.2 598.5 A 408 408 0 0 1 1160.2 981.5" fill="none"/>
+          <path id="arc-sec22-hdr" d="M 785.8 1197.8 A 408 408 0 0 0 1146.0 1006.2" fill="none"/>
+          <path id="arc-sec31-hdr" d="M 454.0 1006.2 A 408 408 0 0 0 785.8 1197.8" fill="none"/>
+          <path id="arc-sec32-hdr" d="M 439.8 981.5 A 408 408 0 0 1 439.8 598.5" fill="none"/>
+
+          <path id="arc-outer-11" d="M 225.0 430.7 A 678 678 0 0 1 776.3 112.4" fill="none"/>
+          <path id="arc-outer-12" d="M 823.7 112.4 A 678 678 0 0 1 1375.0 430.7" fill="none"/>
+          <path id="arc-outer-21" d="M 1398.6 471.7 A 678 678 0 0 1 1398.6 1108.3" fill="none"/>
+          <path id="arc-outer-22" d="M 823.7 1467.6 A 678 678 0 0 0 1375.0 1149.3" fill="none"/>
+          <path id="arc-outer-31" d="M 225.0 1149.3 A 678 678 0 0 0 776.3 1467.6" fill="none"/>
+          <path id="arc-outer-32" d="M 201.4 1108.3 A 678 678 0 0 1 201.4 471.7" fill="none"/>
+        </defs>
+
+        <!-- FONDO GENERAL Y ENCABEZADO -->
+        <rect width="1600" height="1560" rx="24" fill="#ffffff"/>
+        
+        <text x="800" y="48" text-anchor="middle" font-size="27" font-weight="900" fill="#0f172a" letter-spacing="0.4">
+          RUEDA TAXONÓMICA DE LA COCREACIÓN MEDIADA POR TECNOLOGÍA E IA
+        </text>
+        <text x="800" y="76" text-anchor="middle" font-size="15" font-weight="500" fill="#475569">
+          Taxonomía Práctica de Herramientas Digitales e Inteligencia Artificial para el Co-diseño, la Cocreación con Toma de Decisiones y la Co-evaluación
+        </text>
+
+        <circle cx="800" cy="790" r="704" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" filter="url(#wheel-drop-shadow)"/>
+
+        <!-- ANILLO EXTERIOR -->
+        <g class="group-codiseno wheel-sector" onclick="selectSector('1.1')">
+          <path d="M 193.8 440.0 A 700 700 0 0 1 800.0 90.0 L 800.0 355.0 A 435 435 0 0 0 423.3 572.5 Z" fill="#f0fdfa" stroke="#0d9488" stroke-width="2.5"/>
+          <path d="M 193.8 440.0 A 700 700 0 0 1 800.0 90.0 L 800.0 130.0 A 660 660 0 0 0 228.4 460.0 Z" fill="#0f766e"/>
+          <text font-size="12.5" font-weight="800" fill="#ffffff" letter-spacing="0.8">
+            <textPath href="#arc-outer-11" startOffset="50%" text-anchor="middle">
+              1.1 PIZARRAS, MAPAS, LAYOUTS, GANTT E IA PLANIFICADORA
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-codiseno wheel-sector" onclick="selectSector('1.2')">
+          <path d="M 800.0 90.0 A 700 700 0 0 1 1406.2 440.0 L 1176.7 572.5 A 435 435 0 0 0 800.0 355.0 Z" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+          <path d="M 800.0 90.0 A 700 700 0 0 1 1406.2 440.0 L 1371.6 460.0 A 660 660 0 0 0 800.0 130.0 Z" fill="#047857"/>
+          <text font-size="12.5" font-weight="800" fill="#ffffff" letter-spacing="0.8">
+            <textPath href="#arc-outer-12" startOffset="50%" text-anchor="middle">
+              1.2 DISEÑO DE PRODUCTOS, ARTÍCULOS, BANNERS Y PROTOTIPOS IA
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-cocreacion wheel-sector" onclick="selectSector('2.1')">
+          <path d="M 1406.2 440.0 A 700 700 0 0 1 1406.2 1140.0 L 1176.7 1007.5 A 435 435 0 0 0 1176.7 572.5 Z" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+          <path d="M 1406.2 440.0 A 700 700 0 0 1 1406.2 1140.0 L 1371.6 1120.0 A 660 660 0 0 0 1371.6 460.0 Z" fill="#1d4ed8"/>
+          <text font-size="12.5" font-weight="800" fill="#ffffff" letter-spacing="0.8">
+            <textPath href="#arc-outer-21" startOffset="50%" text-anchor="middle">
+              2.1 HERRAMIENTAS DE ANÁLISIS, ISHIKAWA, MATRICES E IA ANALÍTICA
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-cocreacion wheel-sector" onclick="selectSector('2.2')">
+          <path d="M 1406.2 1140.0 A 700 700 0 0 1 800.0 1490.0 L 800.0 1225.0 A 435 435 0 0 0 1176.7 1007.5 Z" fill="#eef2ff" stroke="#1d4ed8" stroke-width="2.5"/>
+          <path d="M 1406.2 1140.0 A 700 700 0 0 1 800.0 1490.0 L 800.0 1450.0 A 660 660 0 0 0 1371.6 1120.0 Z" fill="#1e40af"/>
+          <text font-size="12.5" font-weight="800" fill="#ffffff" letter-spacing="0.8">
+            <textPath href="#arc-outer-22" startOffset="50%" text-anchor="middle">
+              2.2 ENTORNOS DE COAUTORÍA, GESTIÓN DE PROYECTOS E IA TUTORA
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-coevaluacion wheel-sector" onclick="selectSector('3.1')">
+          <path d="M 800.0 1490.0 A 700 700 0 0 1 193.8 1140.0 L 423.3 1007.5 A 435 435 0 0 0 800.0 1225.0 Z" fill="#fffbeb" stroke="#d97706" stroke-width="2.5"/>
+          <path d="M 800.0 1490.0 A 700 700 0 0 1 193.8 1140.0 L 228.4 1120.0 A 660 660 0 0 0 800.0 1450.0 Z" fill="#b45309"/>
+          <text font-size="12.5" font-weight="800" fill="#ffffff" letter-spacing="0.8">
+            <textPath href="#arc-outer-31" startOffset="50%" text-anchor="middle">
+              3.1 PLANTILLAS DE RÚBRICAS, LISTAS DE COTEJO E IA VALIDANTE
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-coevaluacion wheel-sector" onclick="selectSector('3.2')">
+          <path d="M 193.8 1140.0 A 700 700 0 0 1 193.8 440.0 L 423.3 572.5 A 435 435 0 0 0 423.3 1007.5 Z" fill="#fef3c7" stroke="#b45309" stroke-width="2.5"/>
+          <path d="M 193.8 1140.0 A 700 700 0 0 1 193.8 440.0 L 228.4 460.0 A 660 660 0 0 0 228.4 1120.0 Z" fill="#92400e"/>
+          <text font-size="12.5" font-weight="800" fill="#ffffff" letter-spacing="0.8">
+            <textPath href="#arc-outer-32" startOffset="50%" text-anchor="middle">
+              3.2 COEVALUACIÓN EN VIVO, REVISIÓN DE PARES E IA METACOGNITIVA
+            </textPath>
+          </text>
+        </g>
+
+        <!-- ANILLO MEDIO -->
+        <g class="group-codiseno wheel-sector" onclick="selectSector('1.1')">
+          <path d="M 423.3 572.5 A 435 435 0 0 1 800.0 355.0 L 800.0 545.0 A 245 245 0 0 0 587.8 667.5 Z" fill="#0f766e" stroke="#ffffff" stroke-width="3"/>
+          <path d="M 423.3 572.5 A 435 435 0 0 1 800.0 355.0 L 800.0 393.0 A 397 397 0 0 0 456.2 591.5 Z" fill="#115e59"/>
+          <text font-size="11.5" font-weight="800" fill="#99f6e4" letter-spacing="0.6">
+            <textPath href="#arc-sec11-hdr" startOffset="50%" text-anchor="middle">
+              1.1 IDEACIÓN, PLANIFICACIÓN Y ESTRUCTURACIÓN
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-codiseno wheel-sector" onclick="selectSector('1.2')">
+          <path d="M 800.0 355.0 A 435 435 0 0 1 1176.7 572.5 L 1012.2 667.5 A 245 245 0 0 0 800.0 545.0 Z" fill="#0d9488" stroke="#ffffff" stroke-width="3"/>
+          <path d="M 800.0 355.0 A 435 435 0 0 1 1176.7 572.5 L 1143.8 591.5 A 397 397 0 0 0 800.0 393.0 Z" fill="#0f766e"/>
+          <text font-size="11.5" font-weight="800" fill="#99f6e4" letter-spacing="0.6">
+            <textPath href="#arc-sec12-hdr" startOffset="50%" text-anchor="middle">
+              1.2 CO-DISEÑO DE SOLUCIONES Y ARTEFACTOS
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-cocreacion wheel-sector" onclick="selectSector('2.1')">
+          <path d="M 1176.7 572.5 A 435 435 0 0 1 1176.7 1007.5 L 1012.2 912.5 A 245 245 0 0 0 1012.2 667.5 Z" fill="#1d4ed8" stroke="#ffffff" stroke-width="3"/>
+          <path d="M 1176.7 572.5 A 435 435 0 0 1 1176.7 1007.5 L 1143.8 988.5 A 397 397 0 0 0 1143.8 591.5 Z" fill="#1e3a8a"/>
+          <text font-size="11.5" font-weight="800" fill="#bfdbfe" letter-spacing="0.6">
+            <textPath href="#arc-sec21-hdr" startOffset="50%" text-anchor="middle">
+              2.1 ANÁLISIS DE PROBLEMAS Y DECISIONES
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-cocreacion wheel-sector" onclick="selectSector('2.2')">
+          <path d="M 1176.7 1007.5 A 435 435 0 0 1 800.0 1225.0 L 800.0 1035.0 A 245 245 0 0 0 1012.2 912.5 Z" fill="#2563eb" stroke="#ffffff" stroke-width="3"/>
+          <path d="M 1176.7 1007.5 A 435 435 0 0 1 800.0 1225.0 L 800.0 1187.0 A 397 397 0 0 0 1143.8 988.5 Z" fill="#1e40af"/>
+          <text font-size="11.5" font-weight="800" fill="#bfdbfe" letter-spacing="0.6">
+            <textPath href="#arc-sec22-hdr" startOffset="50%" text-anchor="middle">
+              2.2 CONSTRUCCIÓN COLECTIVA Y GESTIÓN EN RED
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-coevaluacion wheel-sector" onclick="selectSector('3.1')">
+          <path d="M 800.0 1225.0 A 435 435 0 0 1 423.3 1007.5 L 587.8 912.5 A 245 245 0 0 0 800.0 1035.0 Z" fill="#d97706" stroke="#ffffff" stroke-width="3"/>
+          <path d="M 800.0 1225.0 A 435 435 0 0 1 423.3 1007.5 L 456.2 988.5 A 397 397 0 0 0 800.0 1187.0 Z" fill="#92400e"/>
+          <text font-size="11.5" font-weight="800" fill="#fde68a" letter-spacing="0.6">
+            <textPath href="#arc-sec31-hdr" startOffset="50%" text-anchor="middle">
+              3.1 DISEÑO DE RÚBRICAS, LISTAS Y PORTAFOLIOS
+            </textPath>
+          </text>
+        </g>
+
+        <g class="group-coevaluacion wheel-sector" onclick="selectSector('3.2')">
+          <path d="M 423.3 1007.5 A 435 435 0 0 1 423.3 572.5 L 587.8 667.5 A 245 245 0 0 0 587.8 912.5 Z" fill="#b45309" stroke="#ffffff" stroke-width="3"/>
+          <path d="M 423.3 1007.5 A 435 435 0 0 1 423.3 572.5 L 456.2 591.5 A 397 397 0 0 0 456.2 988.5 Z" fill="#78350f"/>
+          <text font-size="11.5" font-weight="800" fill="#fde68a" letter-spacing="0.6">
+            <textPath href="#arc-sec32-hdr" startOffset="50%" text-anchor="middle">
+              3.2 RETROALIMENTACIÓN ENTRE PARES Y MEJORA
+            </textPath>
+          </text>
+        </g>
+
+        <!-- TEXTOS DE PROCESOS Y ARTEFACTOS -->
+        <g pointer-events="none">
+          <rect x="526" y="458" width="236" height="114" rx="12" fill="#042f2e" fill-opacity="0.28"/>
+          <text x="644" y="479" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">Procesos y Artefactos Previos:</text>
+          <text x="644" y="498" text-anchor="middle" font-size="11" font-weight="600" fill="#ecfdf5">• Lluvia de ideas, Mapas y Croquis</text>
+          <text x="644" y="515" text-anchor="middle" font-size="11" font-weight="600" fill="#ecfdf5">• Layouts y Blueprints (Planos)</text>
+          <text x="644" y="532" text-anchor="middle" font-size="11" font-weight="600" fill="#ecfdf5">• Diseño de planes de trabajo</text>
+          <text x="644" y="549" text-anchor="middle" font-size="11" font-weight="600" fill="#ecfdf5">• Proyectos y Diagramas de Gantt</text>
+          <text x="644" y="565" text-anchor="middle" font-size="10" font-weight="700" fill="#5eead4">Roles, tiempos y rutas de diseño</text>
+        </g>
+
+        <g pointer-events="none">
+          <rect x="838" y="458" width="236" height="114" rx="12" fill="#042f2e" fill-opacity="0.28"/>
+          <text x="956" y="479" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">Co-diseño de Soluciones:</text>
+          <text x="956" y="498" text-anchor="middle" font-size="11" font-weight="600" fill="#ecfdf5">• Soluciones y Productos finales</text>
+          <text x="956" y="515" text-anchor="middle" font-size="11" font-weight="600" fill="#ecfdf5">• Artículos, Banners y Pósters</text>
+          <text x="956" y="532" text-anchor="middle" font-size="11" font-weight="600" fill="#ecfdf5">• Infografías y Maquetas Web</text>
+          <text x="956" y="549" text-anchor="middle" font-size="11" font-weight="600" fill="#ecfdf5">• Prototipos de Video y Audio</text>
+          <text x="956" y="565" text-anchor="middle" font-size="10" font-weight="700" fill="#5eead4">Materialización visual colaborativa</text>
+        </g>
+
+        <g pointer-events="none">
+          <rect x="1018" y="725" width="204" height="130" rx="12" fill="#172554" fill-opacity="0.32"/>
+          <text x="1120" y="746" text-anchor="middle" font-size="11.5" font-weight="800" fill="#ffffff">Toma de Decisiones:</text>
+          <text x="1120" y="765" text-anchor="middle" font-size="10.8" font-weight="600" fill="#eff6ff">• Tormenta de ideas activa</text>
+          <text x="1120" y="782" text-anchor="middle" font-size="10.8" font-weight="600" fill="#eff6ff">• Matriz de decisiones</text>
+          <text x="1120" y="799" text-anchor="middle" font-size="10.8" font-weight="600" fill="#eff6ff">• Comparaciones y Contrastes</text>
+          <text x="1120" y="816" text-anchor="middle" font-size="10.8" font-weight="600" fill="#eff6ff">• Análisis de riesgos y FODA</text>
+          <text x="1120" y="833" text-anchor="middle" font-size="10.8" font-weight="600" fill="#eff6ff">• Diagrama de Ishikawa</text>
+          <text x="1120" y="849" text-anchor="middle" font-size="9.8" font-weight="700" fill="#93c5fd">Pensamiento crítico y consenso</text>
+        </g>
+
+        <g pointer-events="none">
+          <rect x="838" y="1008" width="236" height="114" rx="12" fill="#172554" fill-opacity="0.32"/>
+          <text x="956" y="1029" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">Construcción Colectiva:</text>
+          <text x="956" y="1048" text-anchor="middle" font-size="11" font-weight="600" fill="#eff6ff">• Coautoría simultánea de textos</text>
+          <text x="956" y="1065" text-anchor="middle" font-size="11" font-weight="600" fill="#eff6ff">• Gestión de proyectos y tareas</text>
+          <text x="956" y="1082" text-anchor="middle" font-size="11" font-weight="600" fill="#eff6ff">• Bitácoras y Acuerdos de equipo</text>
+          <text x="956" y="1099" text-anchor="middle" font-size="11" font-weight="600" fill="#eff6ff">• Curaduría colectiva multimedia</text>
+          <text x="956" y="1115" text-anchor="middle" font-size="10" font-weight="700" fill="#93c5fd">Comunidades de práctica y diálogo</text>
+        </g>
+
+        <g pointer-events="none">
+          <rect x="526" y="1008" width="236" height="114" rx="12" fill="#451a03" fill-opacity="0.28"/>
+          <text x="644" y="1029" text-anchor="middle" font-size="12" font-weight="800" fill="#ffffff">Instrumentos Participativos:</text>
+          <text x="644" y="1048" text-anchor="middle" font-size="11" font-weight="600" fill="#fffbeb">• Rúbricas cocreadas en Hojas</text>
+          <text x="644" y="1065" text-anchor="middle" font-size="11" font-weight="600" fill="#fffbeb">• Listas de cotejo y Checklists</text>
+          <text x="644" y="1082" text-anchor="middle" font-size="11" font-weight="600" fill="#fffbeb">• Plantillas de evaluación grupal</text>
+          <text x="644" y="1099" text-anchor="middle" font-size="11" font-weight="600" fill="#fffbeb">• Portafolios en Google Sites</text>
+          <text x="644" y="1115" text-anchor="middle" font-size="10" font-weight="700" fill="#fde68a">Criterios visibles y transparentes</text>
+        </g>
+
+        <g pointer-events="none">
+          <rect x="378" y="725" width="204" height="130" rx="12" fill="#451a03" fill-opacity="0.28"/>
+          <text x="480" y="746" text-anchor="middle" font-size="11.5" font-weight="800" fill="#ffffff">Evaluación y Revisión:</text>
+          <text x="480" y="765" text-anchor="middle" font-size="10.8" font-weight="600" fill="#fffbeb">• Coevaluar mientras exponen</text>
+          <text x="480" y="782" text-anchor="middle" font-size="10.8" font-weight="600" fill="#fffbeb">• Revisión cruzada de ensayos</text>
+          <text x="480" y="799" text-anchor="middle" font-size="10.8" font-weight="600" fill="#fffbeb">• Comentarios y Notas al margen</text>
+          <text x="480" y="816" text-anchor="middle" font-size="10.8" font-weight="600" fill="#fffbeb">• Control de cambios iterativo</text>
+          <text x="480" y="833" text-anchor="middle" font-size="10.8" font-weight="600" fill="#fffbeb">• Autoevaluación reflexiva</text>
+          <text x="480" y="849" text-anchor="middle" font-size="9.8" font-weight="700" fill="#fde68a">Mejora continua con evidencias</text>
+        </g>
+
+        <!-- ANILLO INTERIOR -->
+        <g class="group-codiseno wheel-sector" onclick="filterDimension('codiseno')">
+          <path d="M 587.8 667.5 A 245 245 0 0 1 1012.2 667.5 L 910.9 726.0 A 128 128 0 0 0 689.1 726.0 Z" fill="#115e59" stroke="#ffffff" stroke-width="4"/>
+          <text font-size="18.5" font-weight="900" fill="#ffffff" letter-spacing="1.5">
+            <textPath href="#arc-dim1-title" startOffset="50%" text-anchor="middle">1. CO-DISEÑO</textPath>
+          </text>
+          <text font-size="11" font-weight="700" fill="#99f6e4" letter-spacing="0.4">
+            <textPath href="#arc-dim1-sub" startOffset="50%" text-anchor="middle">Planificación, Croquis y Prototipado («Diseñar con»)</textPath>
+          </text>
+        </g>
+
+        <g class="group-cocreacion wheel-sector" onclick="filterDimension('cocreacion')">
+          <path d="M 1012.2 667.5 A 245 245 0 0 1 800.0 1035.0 L 800.0 918.0 A 128 128 0 0 0 910.9 726.0 Z" fill="#1e3a8a" stroke="#ffffff" stroke-width="4"/>
+          <text font-size="15.5" font-weight="900" fill="#ffffff" letter-spacing="0.8">
+            <textPath href="#arc-dim2-title" startOffset="50%" text-anchor="middle">2. COCREACIÓN Y DECISIONES</textPath>
+          </text>
+          <text font-size="10.8" font-weight="700" fill="#93c5fd" letter-spacing="0.3">
+            <textPath href="#arc-dim2-sub" startOffset="50%" text-anchor="middle">Análisis de Problemas y Construcción Colectiva</textPath>
+          </text>
+        </g>
+
+        <g class="group-coevaluacion wheel-sector" onclick="filterDimension('coevaluacion')">
+          <path d="M 800.0 1035.0 A 245 245 0 0 1 587.8 667.5 L 689.1 726.0 A 128 128 0 0 0 800.0 918.0 Z" fill="#78350f" stroke="#ffffff" stroke-width="4"/>
+          <text font-size="17.5" font-weight="900" fill="#ffffff" letter-spacing="1.2">
+            <textPath href="#arc-dim3-title" startOffset="50%" text-anchor="middle">3. CO-EVALUACIÓN</textPath>
+          </text>
+          <text font-size="11" font-weight="700" fill="#fde68a" letter-spacing="0.4">
+            <textPath href="#arc-dim3-sub" startOffset="50%" text-anchor="middle">Rúbricas, Listas de Cotejo y Evaluación Pares</textPath>
+          </text>
+        </g>
+
+        <!-- NÚCLEO CENTRAL -->
+        <g onclick="filterDimension('all')" class="cursor-pointer">
+          <circle cx="800" cy="790" r="128" fill="#0f172a" stroke="#38bdf8" stroke-width="4.5" filter="url(#core-shadow)"/>
+          <circle cx="800" cy="790" r="116" fill="none" stroke="#334155" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="800" y="748" text-anchor="middle" font-size="11" font-weight="800" fill="#38bdf8" letter-spacing="1.4">EJE ARTICULADOR</text>
+          <text x="800" y="773" text-anchor="middle" font-size="16" font-weight="900" fill="#ffffff">COCREACIÓN</text>
+          <text x="800" y="793" text-anchor="middle" font-size="14.5" font-weight="900" fill="#ffffff">EDUCATIVA</text>
+          <text x="800" y="813" text-anchor="middle" font-size="12" font-weight="700" fill="#f8fafc">MEDIADA POR IA</text>
+          <line x1="745" y1="825" x2="855" y2="825" stroke="#38bdf8" stroke-width="1.5" stroke-opacity="0.5"/>
+          <text x="800" y="843" text-anchor="middle" font-size="10.5" font-weight="600" fill="#94a3b8">Agencia • Diálogo • TPACK</text>
+          <text x="800" y="858" text-anchor="middle" font-size="9.5" font-weight="500" fill="#64748b">Andamiaje Cognitivo</text>
+        </g>
+
+        <!-- CONTENEDORES DENTRO DEL ANILLO 3 -->
+        <foreignObject x="372" y="218" width="318" height="202" class="group-codiseno">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="sector-card">
+            <div class="bg-white/95 backdrop-blur-sm border-2 border-teal-500/80 rounded-2xl p-2.5 shadow-md w-full">
+              <div class="text-[10.5px] font-extrabold uppercase tracking-wider text-teal-800 mb-1.5 flex items-center justify-center gap-1">
+                <span>📐 Croquis, Layouts, Blueprints y Gantt</span>
+              </div>
+              <div class="flex flex-wrap justify-center gap-1.5 mb-2">
+                <a href="https://miro.com/education/" target="_blank" rel="noopener" class="tool-chip bg-amber-50 text-slate-900 border border-amber-400">
+                  <span class="w-4 h-4 rounded bg-amber-400 text-slate-950 flex items-center justify-center font-black text-[9px]">M</span>
+                  <span>Miro</span>
+                </a>
+                <a href="https://www.figma.com/figjam/" target="_blank" rel="noopener" class="tool-chip bg-purple-50 text-purple-950 border border-purple-300">
+                  <span class="w-4 h-4 rounded bg-purple-600 text-white flex items-center justify-center font-black text-[9px]">F</span>
+                  <span>FigJam</span>
+                </a>
+                <a href="https://www.lucidchart.com/" target="_blank" rel="noopener" class="tool-chip bg-orange-50 text-orange-950 border border-orange-300">
+                  <span class="w-4 h-4 rounded bg-orange-500 text-white flex items-center justify-center font-black text-[9px]">L</span>
+                  <span>Lucidchart</span>
+                </a>
+                <a href="https://trello.com/" target="_blank" rel="noopener" class="tool-chip bg-sky-50 text-sky-950 border border-sky-300">
+                  <span class="w-4 h-4 rounded bg-sky-600 text-white flex items-center justify-center font-black text-[9px]">T</span>
+                  <span>Trello</span>
+                </a>
+                <a href="https://sheets.google.com/" target="_blank" rel="noopener" class="tool-chip bg-emerald-50 text-emerald-950 border border-emerald-300">
+                  <span class="w-4 h-4 rounded bg-emerald-600 text-white flex items-center justify-center font-black text-[9px]">⊞</span>
+                  <span>Sheets (Gantt)</span>
+                </a>
+              </div>
+              <div class="bg-teal-900/95 rounded-xl px-2 py-1.5 text-white">
+                <div class="text-[9.5px] font-extrabold text-teal-200 uppercase tracking-wider mb-1">🤖 IA Consultiva y Planificadora</div>
+                <div class="flex flex-wrap justify-center gap-1">
+                  <a href="https://gemini.google.com/" target="_blank" rel="noopener" class="ai-chip bg-teal-700 hover:bg-teal-600 text-white border border-teal-400/50">✦ Gemini</a>
+                  <a href="https://copilot.microsoft.com/" target="_blank" rel="noopener" class="ai-chip bg-teal-700 hover:bg-teal-600 text-white border border-teal-400/50">⚡ Copilot</a>
+                  <a href="https://notebooklm.google.com/" target="_blank" rel="noopener" class="ai-chip bg-teal-700 hover:bg-teal-600 text-white border border-teal-400/50">📓 NotebookLM</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </foreignObject>
+
+        <foreignObject x="910" y="218" width="318" height="202" class="group-codiseno">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="sector-card">
+            <div class="bg-white/95 backdrop-blur-sm border-2 border-emerald-600/80 rounded-2xl p-2.5 shadow-md w-full">
+              <div class="text-[10.5px] font-extrabold uppercase tracking-wider text-emerald-900 mb-1.5">
+                🎨 Productos, Artículos, Banners y Prototipos
+              </div>
+              <div class="flex flex-wrap justify-center gap-1.5 mb-2">
+                <a href="https://www.canva.com/education/" target="_blank" rel="noopener" class="tool-chip bg-cyan-50 text-cyan-950 border border-cyan-400">
+                  <span class="w-4 h-4 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 text-white flex items-center justify-center font-black text-[9px]">C</span>
+                  <span>Canva Edu</span>
+                </a>
+                <a href="https://workspace.google.com/products/vids/" target="_blank" rel="noopener" class="tool-chip bg-rose-50 text-rose-950 border border-rose-300">
+                  <span class="w-4 h-4 rounded bg-rose-600 text-white flex items-center justify-center font-black text-[9px]">▶</span>
+                  <span>Google Vids</span>
+                </a>
+                <a href="https://www.blackmagicdesign.com/products/davinciresolve" target="_blank" rel="noopener" class="tool-chip bg-slate-100 text-slate-900 border border-slate-400">
+                  <span class="w-4 h-4 rounded bg-slate-800 text-sky-400 flex items-center justify-center font-black text-[9px]">🎬</span>
+                  <span>DaVinci</span>
+                </a>
+                <a href="https://sites.google.com/" target="_blank" rel="noopener" class="tool-chip bg-indigo-50 text-indigo-950 border border-indigo-300">
+                  <span class="w-4 h-4 rounded bg-indigo-600 text-white flex items-center justify-center font-black text-[9px]">🌐</span>
+                  <span>Google Sites</span>
+                </a>
+              </div>
+              <div class="bg-emerald-900/95 rounded-xl px-2 py-1.5 text-white">
+                <div class="text-[9.5px] font-extrabold text-emerald-200 uppercase tracking-wider mb-1">🤖 IA Co-diseñadora de Artefactos</div>
+                <div class="flex flex-wrap justify-center gap-1">
+                  <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="ai-chip bg-emerald-700 hover:bg-emerald-600 text-white border border-emerald-400/50">🌀 ChatGPT (Canvas)</a>
+                  <a href="https://aistudio.google.com/" target="_blank" rel="noopener" class="ai-chip bg-emerald-700 hover:bg-emerald-600 text-white border border-emerald-400/50">🍌 Nano Banana (Imagen IA)</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </foreignObject>
+
+        <foreignObject x="1225" y="672" width="232" height="236" class="group-cocreacion">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="sector-card">
+            <div class="bg-white/95 backdrop-blur-sm border-2 border-blue-600/80 rounded-2xl p-2.5 shadow-md w-full">
+              <div class="text-[10px] font-extrabold uppercase tracking-wider text-blue-900 mb-1.5">
+                🧠 Ishikawa, Matrices y Riesgos
+              </div>
+              <div class="flex flex-wrap justify-center gap-1 mb-2">
+                <a href="https://www.mural.co/" target="_blank" rel="noopener" class="tool-chip bg-pink-50 text-pink-950 border border-pink-300">
+                  <span class="w-4 h-4 rounded bg-pink-600 text-white flex items-center justify-center font-black text-[9px]">M</span>
+                  <span>Mural</span>
+                </a>
+                <a href="https://stormboard.com/" target="_blank" rel="noopener" class="tool-chip bg-sky-50 text-sky-950 border border-sky-300">
+                  <span class="w-4 h-4 rounded bg-sky-600 text-white flex items-center justify-center font-black text-[9px]">S</span>
+                  <span>Stormboard</span>
+                </a>
+                <a href="https://www.mindmeister.com/" target="_blank" rel="noopener" class="tool-chip bg-fuchsia-50 text-fuchsia-950 border border-fuchsia-300">
+                  <span class="w-4 h-4 rounded bg-fuchsia-600 text-white flex items-center justify-center font-black text-[9px]">🧠</span>
+                  <span>MindMeister</span>
+                </a>
+                <a href="https://coggle.it/" target="_blank" rel="noopener" class="tool-chip bg-teal-50 text-teal-950 border border-teal-300">
+                  <span class="w-4 h-4 rounded bg-teal-600 text-white flex items-center justify-center font-black text-[9px]">C</span>
+                  <span>Coggle</span>
+                </a>
+                <a href="https://www.mentimeter.com/" target="_blank" rel="noopener" class="tool-chip bg-blue-50 text-blue-950 border border-blue-300">
+                  <span class="w-4 h-4 rounded bg-blue-600 text-white flex items-center justify-center font-black text-[9px]">📊</span>
+                  <span>Mentimeter</span>
+                </a>
+              </div>
+              <div class="bg-blue-950/95 rounded-xl px-2 py-1.5 text-white">
+                <div class="text-[9px] font-extrabold text-blue-200 uppercase tracking-wider mb-1">🤖 IA Razonamiento y Decisiones</div>
+                <div class="flex flex-wrap justify-center gap-1">
+                  <a href="https://claude.ai/" target="_blank" rel="noopener" class="ai-chip bg-blue-800 hover:bg-blue-700 text-white border border-blue-400/50">✴ Claude</a>
+                  <a href="https://www.deepseek.com/" target="_blank" rel="noopener" class="ai-chip bg-blue-800 hover:bg-blue-700 text-white border border-blue-400/50">🐳 DeepSeek</a>
+                  <a href="https://grok.com/" target="_blank" rel="noopener" class="ai-chip bg-blue-800 hover:bg-blue-700 text-white border border-blue-400/50">𝕏 Grok</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </foreignObject>
+
+        <foreignObject x="910" y="1158" width="318" height="202" class="group-cocreacion">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="sector-card">
+            <div class="bg-white/95 backdrop-blur-sm border-2 border-indigo-600/80 rounded-2xl p-2.5 shadow-md w-full">
+              <div class="text-[10.5px] font-extrabold uppercase tracking-wider text-indigo-900 mb-1.5">
+                🤝 Coautoría, Gestión y Comunidad en Red
+              </div>
+              <div class="flex flex-wrap justify-center gap-1.5 mb-2">
+                <a href="https://classroom.google.com/" target="_blank" rel="noopener" class="tool-chip bg-emerald-50 text-emerald-950 border border-emerald-400">
+                  <span class="w-4 h-4 rounded bg-emerald-600 text-white flex items-center justify-center font-black text-[9px]">🏫</span>
+                  <span>Classroom</span>
+                </a>
+                <a href="https://www.microsoft.com/es-mx/education/products/teams" target="_blank" rel="noopener" class="tool-chip bg-indigo-50 text-indigo-950 border border-indigo-300">
+                  <span class="w-4 h-4 rounded bg-indigo-600 text-white flex items-center justify-center font-black text-[9px]">T</span>
+                  <span>MS Teams</span>
+                </a>
+                <a href="https://docs.google.com/" target="_blank" rel="noopener" class="tool-chip bg-blue-50 text-blue-950 border border-blue-300">
+                  <span class="w-4 h-4 rounded bg-blue-600 text-white flex items-center justify-center font-black text-[9px]">📄</span>
+                  <span>Google Docs</span>
+                </a>
+                <a href="https://www.onenote.com/" target="_blank" rel="noopener" class="tool-chip bg-purple-50 text-purple-950 border border-purple-300">
+                  <span class="w-4 h-4 rounded bg-purple-700 text-white flex items-center justify-center font-black text-[9px]">N</span>
+                  <span>OneNote</span>
+                </a>
+                <a href="https://padlet.com/" target="_blank" rel="noopener" class="tool-chip bg-rose-50 text-rose-950 border border-rose-300">
+                  <span class="w-4 h-4 rounded bg-rose-500 text-white flex items-center justify-center font-black text-[9px]">📌</span>
+                  <span>Padlet</span>
+                </a>
+                <a href="https://wakelet.com/" target="_blank" rel="noopener" class="tool-chip bg-sky-50 text-sky-950 border border-sky-300">
+                  <span class="w-4 h-4 rounded bg-sky-600 text-white flex items-center justify-center font-black text-[9px]">W</span>
+                  <span>Wakelet</span>
+                </a>
+              </div>
+              <div class="bg-indigo-950/95 rounded-xl px-2 py-1.5 text-white">
+                <div class="text-[9.5px] font-extrabold text-indigo-200 uppercase tracking-wider mb-1">🤖 IA Tutora y Mediadora Cognitiva</div>
+                <div class="flex flex-wrap justify-center gap-1">
+                  <a href="https://www.khanacademy.org/khanmigo" target="_blank" rel="noopener" class="ai-chip bg-indigo-800 hover:bg-indigo-700 text-white border border-indigo-400/50">🦉 Khanmigo (Khan)</a>
+                  <a href="https://workspace.google.com/solutions/ai/" target="_blank" rel="noopener" class="ai-chip bg-indigo-800 hover:bg-indigo-700 text-white border border-indigo-400/50">✦ Gemini Workspace</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </foreignObject>
+
+        <foreignObject x="372" y="1158" width="318" height="202" class="group-coevaluacion">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="sector-card">
+            <div class="bg-white/95 backdrop-blur-sm border-2 border-amber-500/90 rounded-2xl p-2.5 shadow-md w-full">
+              <div class="text-[10.5px] font-extrabold uppercase tracking-wider text-amber-900 mb-1.5">
+                📊 Rúbricas, Listas de Cotejo y Portafolios
+              </div>
+              <div class="flex flex-wrap justify-center gap-1.5 mb-2">
+                <a href="https://sheets.google.com/" target="_blank" rel="noopener" class="tool-chip bg-emerald-50 text-emerald-950 border border-emerald-400">
+                  <span class="w-4 h-4 rounded bg-emerald-600 text-white flex items-center justify-center font-black text-[9px]">⊞</span>
+                  <span>Sheets (Rúbricas)</span>
+                </a>
+                <a href="https://slides.google.com/" target="_blank" rel="noopener" class="tool-chip bg-yellow-50 text-amber-950 border border-amber-400">
+                  <span class="w-4 h-4 rounded bg-amber-500 text-white flex items-center justify-center font-black text-[9px]">▣</span>
+                  <span>Slides (Plantillas)</span>
+                </a>
+                <a href="https://sites.google.com/" target="_blank" rel="noopener" class="tool-chip bg-indigo-50 text-indigo-950 border border-indigo-300">
+                  <span class="w-4 h-4 rounded bg-indigo-600 text-white flex items-center justify-center font-black text-[9px]">🌐</span>
+                  <span>Google Sites</span>
+                </a>
+                <a href="https://www.canva.com/education/" target="_blank" rel="noopener" class="tool-chip bg-cyan-50 text-cyan-950 border border-cyan-400">
+                  <span class="w-4 h-4 rounded-full bg-cyan-600 text-white flex items-center justify-center font-black text-[9px]">C</span>
+                  <span>Canva (Dianas)</span>
+                </a>
+              </div>
+              <div class="bg-amber-950/95 rounded-xl px-2 py-1.5 text-white">
+                <div class="text-[9.5px] font-extrabold text-amber-200 uppercase tracking-wider mb-1">🤖 IA Cocreadora de Criterios y Rúbricas</div>
+                <div class="flex flex-wrap justify-center gap-1">
+                  <a href="https://claude.ai/" target="_blank" rel="noopener" class="ai-chip bg-amber-800 hover:bg-amber-700 text-white border border-amber-400/50">✴ Claude</a>
+                  <a href="https://gemini.google.com/" target="_blank" rel="noopener" class="ai-chip bg-amber-800 hover:bg-amber-700 text-white border border-amber-400/50">✦ Gemini</a>
+                  <a href="https://chatgpt.com/" target="_blank" rel="noopener" class="ai-chip bg-amber-800 hover:bg-amber-700 text-white border border-amber-400/50">🌀 ChatGPT</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </foreignObject>
+
+        <foreignObject x="143" y="672" width="232" height="236" class="group-coevaluacion">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="sector-card">
+            <div class="bg-white/95 backdrop-blur-sm border-2 border-amber-700/80 rounded-2xl p-2.5 shadow-md w-full">
+              <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-950 mb-1.5">
+                💬 Coevaluación en Vivo y Revisión
+              </div>
+              <div class="flex flex-wrap justify-center gap-1 mb-2">
+                <a href="https://forms.google.com/" target="_blank" rel="noopener" class="tool-chip bg-purple-50 text-purple-950 border border-purple-400">
+                  <span class="w-4 h-4 rounded bg-purple-600 text-white flex items-center justify-center font-black text-[9px]">⋮≡</span>
+                  <span>Google Forms</span>
+                </a>
+                <a href="https://forms.office.com/" target="_blank" rel="noopener" class="tool-chip bg-teal-50 text-teal-950 border border-teal-400">
+                  <span class="w-4 h-4 rounded bg-teal-600 text-white flex items-center justify-center font-black text-[9px]">F</span>
+                  <span>MS Forms</span>
+                </a>
+                <a href="https://docs.google.com/" target="_blank" rel="noopener" class="tool-chip bg-blue-50 text-blue-950 border border-blue-400">
+                  <span class="w-4 h-4 rounded bg-blue-600 text-white flex items-center justify-center font-black text-[9px]">✎</span>
+                  <span>Docs (Revisión)</span>
+                </a>
+                <a href="https://kahoot.com/" target="_blank" rel="noopener" class="tool-chip bg-violet-50 text-violet-950 border border-violet-300">
+                  <span class="w-4 h-4 rounded bg-violet-700 text-white flex items-center justify-center font-black text-[9px]">K!</span>
+                  <span>Kahoot!</span>
+                </a>
+              </div>
+              <div class="bg-amber-950/95 rounded-xl px-2 py-1.5 text-white">
+                <div class="text-[9px] font-extrabold text-amber-200 uppercase tracking-wider mb-1">🤖 IA Retroalimentación Formativa</div>
+                <div class="flex flex-wrap justify-center gap-1">
+                  <a href="https://notebooklm.google.com/" target="_blank" rel="noopener" class="ai-chip bg-amber-800 hover:bg-amber-700 text-white border border-amber-400/50">📓 NotebookLM</a>
+                  <a href="https://www.khanacademy.org/khanmigo" target="_blank" rel="noopener" class="ai-chip bg-amber-800 hover:bg-amber-700 text-white border border-amber-400/50">🦉 Khanmigo</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </foreignObject>
+
+        <!-- LÍNEAS RADIALES DIVISORIAS -->
+        <line x1="689.1" y1="726.0" x2="193.8" y2="440.0" stroke="#ffffff" stroke-width="4" pointer-events="none"/>
+        <line x1="910.9" y1="726.0" x2="1406.2" y2="440.0" stroke="#ffffff" stroke-width="4" pointer-events="none"/>
+        <line x1="800.0" y1="918.0" x2="800.0" y2="1490.0" stroke="#ffffff" stroke-width="4" pointer-events="none"/>
+        <line x1="800.0" y1="545.0" x2="800.0" y2="90.0" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 4" pointer-events="none"/>
+        <line x1="1012.2" y1="912.5" x2="1406.2" y2="1140.0" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 4" pointer-events="none"/>
+        <line x1="587.8" y1="912.5" x2="193.8" y2="1140.0" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 4" pointer-events="none"/>
+
+        <!-- PIE DE PÁGINA Y FIRMA DE AUTORÍA -->
+        <g transform="translate(55, 1502)">
+          <rect x="0" y="0" width="1080" height="42" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="18" y="26" font-size="12.5" font-weight="800" fill="#0f172a">NIVELES CONCÉNTRICOS DE LA RUEDA:</text>
+          <circle cx="272" cy="21" r="7" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+          <text x="285" y="25.5" font-size="12" font-weight="700" fill="#334155">Núcleo: Filosofía Cocreativa</text>
+          <circle cx="475" cy="21" r="7" fill="#0f766e"/>
+          <text x="488" y="25.5" font-size="12" font-weight="700" fill="#334155">Anillo 1: Dimensión Taxonómica</text>
+          <circle cx="702" cy="21" r="7" fill="#1d4ed8"/>
+          <text x="715" y="25.5" font-size="12" font-weight="700" fill="#334155">Anillo 2: Procesos y Artefactos</text>
+          <circle cx="920" cy="21" r="7" fill="#d97706"/>
+          <text x="933" y="25.5" font-size="12" font-weight="700" fill="#334155">Anillo 3: TIC e IA (Links)</text>
+        </g>
+
+        <g transform="translate(1165, 1502)">
+          <rect x="0" y="0" width="380" height="42" rx="10" fill="#0f172a"/>
+          <text x="190" y="26" text-anchor="middle" font-size="14" font-weight="800" fill="#f8fafc" letter-spacing="0.4">
+            Autoría: Cordero, X. (2026)
+          </text>
+        </g>
+
+      </svg>
+    </div>
+
+    <!-- PANEL INFERIOR DETALLADO Y NOTA DE LICENCIAMIENTO -->
+    <section id="sector-detail-panel" class="w-full mt-6 bg-slate-50 rounded-2xl p-5 border border-slate-200 transition-all">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-3 mb-4 border-b border-slate-200">
+        <div>
+          <span id="detail-badge" class="px-2.5 py-1 rounded-md text-xs font-extrabold uppercase bg-teal-900 text-teal-100">
+            Directorio Completo de los 6 Sectores Taxonómicos
+          </span>
+          <h2 id="detail-title" class="text-lg font-black text-slate-900 mt-1">
+            Acceso Directo a Todas las Herramientas e IA por Fase Pedagógica
+          </h2>
+        </div>
+        <p class="text-xs text-slate-500">
+          Haz clic en cualquier sector de la rueda para resaltarlo o selecciona directamente una herramienta aquí debajo.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="cards-container">
+        
+        <!-- Card 1.1 -->
+        <div id="card-1.1" class="bg-white rounded-xl p-4 border-l-4 border-teal-600 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-extrabold text-teal-700 uppercase">1. Co-diseño • Fase Previa</span>
+            <span class="text-[11px] font-bold bg-teal-50 text-teal-800 px-2 py-0.5 rounded">Sector 1.1</span>
+          </div>
+          <h3 class="text-sm font-black text-slate-900 mb-1">Ideación, Mapas, Layouts y Gantt</h3>
+          <p class="text-xs text-slate-600 mb-3">
+            Antes de crear el producto: lluvia de ideas, mapas, croquis, layouts, blueprints (planos), diseño de planes de trabajo, proyectos y diagramas de Gantt.
+          </p>
+          <div class="text-[11px] font-bold text-slate-700 mb-1">Herramientas Digitales e IA:</div>
+          <div class="flex flex-wrap gap-1.5">
+            <a href="https://miro.com/education/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-teal-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Miro</a>
+            <a href="https://www.figma.com/figjam/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-teal-100 text-slate-800 rounded text-xs font-semibold transition">🔗 FigJam</a>
+            <a href="https://www.lucidchart.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-teal-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Lucidchart</a>
+            <a href="https://trello.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-teal-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Trello</a>
+            <a href="https://sheets.google.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-teal-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Sheets (Gantt)</a>
+            <a href="https://gemini.google.com/" target="_blank" class="px-2 py-1 bg-teal-900 text-white rounded text-xs font-semibold transition">🤖 Gemini</a>
+            <a href="https://copilot.microsoft.com/" target="_blank" class="px-2 py-1 bg-teal-900 text-white rounded text-xs font-semibold transition">🤖 Copilot</a>
+            <a href="https://notebooklm.google.com/" target="_blank" class="px-2 py-1 bg-teal-900 text-white rounded text-xs font-semibold transition">🤖 NotebookLM</a>
+          </div>
+        </div>
+
+        <!-- Card 1.2 -->
+        <div id="card-1.2" class="bg-white rounded-xl p-4 border-l-4 border-emerald-600 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-extrabold text-emerald-700 uppercase">1. Co-diseño • Artefactos</span>
+            <span class="text-[11px] font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded">Sector 1.2</span>
+          </div>
+          <h3 class="text-sm font-black text-slate-900 mb-1">Soluciones, Productos, Artículos y Banners</h3>
+          <p class="text-xs text-slate-600 mb-3">
+            Materialización conjunta de soluciones, productos, artículos editoriales, banners, infografías, maquetas web y prototipos en video.
+          </p>
+          <div class="text-[11px] font-bold text-slate-700 mb-1">Herramientas Digitales e IA:</div>
+          <div class="flex flex-wrap gap-1.5">
+            <a href="https://www.canva.com/education/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Canva Edu</a>
+            <a href="https://workspace.google.com/products/vids/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Google Vids</a>
+            <a href="https://www.blackmagicdesign.com/products/davinciresolve" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-800 rounded text-xs font-semibold transition">🔗 DaVinci Resolve</a>
+            <a href="https://sites.google.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-emerald-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Google Sites</a>
+            <a href="https://chatgpt.com/" target="_blank" class="px-2 py-1 bg-emerald-900 text-white rounded text-xs font-semibold transition">🤖 ChatGPT (Canvas)</a>
+            <a href="https://aistudio.google.com/" target="_blank" class="px-2 py-1 bg-emerald-900 text-white rounded text-xs font-semibold transition">🤖 Nano Banana (Imagen IA)</a>
+          </div>
+        </div>
+
+        <!-- Card 2.1 -->
+        <div id="card-2.1" class="bg-white rounded-xl p-4 border-l-4 border-blue-600 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-extrabold text-blue-700 uppercase">2. Cocreación • Decisiones</span>
+            <span class="text-[11px] font-bold bg-blue-50 text-blue-800 px-2 py-0.5 rounded">Sector 2.1</span>
+          </div>
+          <h3 class="text-sm font-black text-slate-900 mb-1">Análisis de Problemas y Toma de Decisiones</h3>
+          <p class="text-xs text-slate-600 mb-3">
+            Tormenta de ideas, análisis de decisiones, comparaciones y contrastes, matriz de decisiones, análisis de riesgos, diagrama de Ishikawa y FODA.
+          </p>
+          <div class="text-[11px] font-bold text-slate-700 mb-1">Herramientas Digitales e IA:</div>
+          <div class="flex flex-wrap gap-1.5">
+            <a href="https://www.mural.co/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-blue-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Mural</a>
+            <a href="https://stormboard.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-blue-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Stormboard</a>
+            <a href="https://www.mindmeister.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-blue-100 text-slate-800 rounded text-xs font-semibold transition">🔗 MindMeister</a>
+            <a href="https://coggle.it/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-blue-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Coggle</a>
+            <a href="https://www.mentimeter.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-blue-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Mentimeter</a>
+            <a href="https://claude.ai/" target="_blank" class="px-2 py-1 bg-blue-900 text-white rounded text-xs font-semibold transition">🤖 Claude</a>
+            <a href="https://www.deepseek.com/" target="_blank" class="px-2 py-1 bg-blue-900 text-white rounded text-xs font-semibold transition">🤖 DeepSeek</a>
+            <a href="https://grok.com/" target="_blank" class="px-2 py-1 bg-blue-900 text-white rounded text-xs font-semibold transition">🤖 Grok</a>
+          </div>
+        </div>
+
+        <!-- Card 2.2 -->
+        <div id="card-2.2" class="bg-white rounded-xl p-4 border-l-4 border-indigo-600 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-extrabold text-indigo-700 uppercase">2. Cocreación • Comunidad</span>
+            <span class="text-[11px] font-bold bg-indigo-50 text-indigo-800 px-2 py-0.5 rounded">Sector 2.2</span>
+          </div>
+          <h3 class="text-sm font-black text-slate-900 mb-1">Construcción Colectiva y Gestión en Red</h3>
+          <p class="text-xs text-slate-600 mb-3">
+            Coautoría simultánea de ensayos e informes, gestión de proyectos en aula virtual, bitácoras de acuerdos y curaduría de evidencias.
+          </p>
+          <div class="text-[11px] font-bold text-slate-700 mb-1">Herramientas Digitales e IA:</div>
+          <div class="flex flex-wrap gap-1.5">
+            <a href="https://classroom.google.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-indigo-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Classroom</a>
+            <a href="https://www.microsoft.com/es-mx/education/products/teams" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-indigo-100 text-slate-800 rounded text-xs font-semibold transition">🔗 MS Teams</a>
+            <a href="https://docs.google.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-indigo-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Google Docs</a>
+            <a href="https://www.onenote.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-indigo-100 text-slate-800 rounded text-xs font-semibold transition">🔗 OneNote</a>
+            <a href="https://padlet.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-indigo-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Padlet</a>
+            <a href="https://wakelet.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-indigo-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Wakelet</a>
+            <a href="https://www.khanacademy.org/khanmigo" target="_blank" class="px-2 py-1 bg-indigo-900 text-white rounded text-xs font-semibold transition">🤖 Khanmigo</a>
+            <a href="https://workspace.google.com/solutions/ai/" target="_blank" class="px-2 py-1 bg-indigo-900 text-white rounded text-xs font-semibold transition">🤖 Gemini Workspace</a>
+          </div>
+        </div>
+
+        <!-- Card 3.1 -->
+        <div id="card-3.1" class="bg-white rounded-xl p-4 border-l-4 border-amber-500 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-extrabold text-amber-700 uppercase">3. Co-evaluación • Instrumentos</span>
+            <span class="text-[11px] font-bold bg-amber-50 text-amber-900 px-2 py-0.5 rounded">Sector 3.1</span>
+          </div>
+          <h3 class="text-sm font-black text-slate-900 mb-1">Rúbricas, Listas de Cotejo y Portafolios</h3>
+          <p class="text-xs text-slate-600 mb-3">
+            Plantillas en hojas de cálculo para rúbricas automatizadas, listas de cotejo, presentaciones con matrices de evaluación y portafolios en Sites.
+          </p>
+          <div class="text-[11px] font-bold text-slate-700 mb-1">Herramientas Digitales e IA:</div>
+          <div class="flex flex-wrap gap-1.5">
+            <a href="https://sheets.google.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-amber-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Google Sheets</a>
+            <a href="https://slides.google.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-amber-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Google Slides</a>
+            <a href="https://sites.google.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-amber-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Google Sites</a>
+            <a href="https://www.canva.com/education/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-amber-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Canva</a>
+            <a href="https://claude.ai/" target="_blank" class="px-2 py-1 bg-amber-900 text-white rounded text-xs font-semibold transition">🤖 Claude</a>
+            <a href="https://gemini.google.com/" target="_blank" class="px-2 py-1 bg-amber-900 text-white rounded text-xs font-semibold transition">🤖 Gemini</a>
+            <a href="https://chatgpt.com/" target="_blank" class="px-2 py-1 bg-amber-900 text-white rounded text-xs font-semibold transition">🤖 ChatGPT</a>
+          </div>
+        </div>
+
+        <!-- Card 3.2 -->
+        <div id="card-3.2" class="bg-white rounded-xl p-4 border-l-4 border-orange-600 shadow-sm hover:shadow-md transition">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-extrabold text-orange-800 uppercase">3. Co-evaluación • Retroalimentación</span>
+            <span class="text-[11px] font-bold bg-orange-50 text-orange-900 px-2 py-0.5 rounded">Sector 3.2</span>
+          </div>
+          <h3 class="text-sm font-black text-slate-900 mb-1">Evaluación en Exposiciones y Revisión Pares</h3>
+          <p class="text-xs text-slate-600 mb-3">
+            Formularios para evaluar a compañeros mientras exponen, revisión de ensayos en Docs mediante comentarios, notas y control de cambios.
+          </p>
+          <div class="text-[11px] font-bold text-slate-700 mb-1">Herramientas Digitales e IA:</div>
+          <div class="flex flex-wrap gap-1.5">
+            <a href="https://forms.google.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-orange-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Google Forms</a>
+            <a href="https://forms.office.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-orange-100 text-slate-800 rounded text-xs font-semibold transition">🔗 MS Forms</a>
+            <a href="https://docs.google.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-orange-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Docs (Comentarios)</a>
+            <a href="https://kahoot.com/" target="_blank" class="px-2 py-1 bg-slate-100 hover:bg-orange-100 text-slate-800 rounded text-xs font-semibold transition">🔗 Kahoot!</a>
+            <a href="https://notebooklm.google.com/" target="_blank" class="px-2 py-1 bg-amber-900 text-white rounded text-xs font-semibold transition">🤖 NotebookLM</a>
+            <a href="https://www.khanacademy.org/khanmigo" target="_blank" class="px-2 py-1 bg-amber-900 text-white rounded text-xs font-semibold transition">🤖 Khanmigo</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Pie de Página / Nota de Autoría y Licenciamiento -->
+  <footer class="w-full max-w-[1440px] bg-white border-t border-slate-200 py-6 px-6 text-center text-xs text-slate-500 mt-8 rounded-2xl shadow-sm">
+    <p class="max-w-4xl mx-auto leading-relaxed">
+      © 2026 Xavier E. Cordero. Todos los derechos reservados. Rueda Taxonómica de la Cocreación Mediada por Tecnología e IA (MCAM-IA). Esta herramienta se comparte bajo una licencia Creative Commons Atribución-NoComercial-SinDerivadas 4.0 Internacional.
+    </p>
+  </footer>
+
+  <script>
+    function filterDimension(dim) {
+      const codiseno = document.querySelectorAll('.group-codiseno');
+      const cocreacion = document.querySelectorAll('.group-cocreacion');
+      const coevaluacion = document.querySelectorAll('.group-coevaluacion');
+
+      const setOpacity = (elements, val) => {
+        elements.forEach(el => {
+          el.style.opacity = val;
+        });
+      };
+
+      if (dim === 'all') {
+        setOpacity(codiseno, '1');
+        setOpacity(cocreacion, '1');
+        setOpacity(coevaluacion, '1');
+      } else if (dim === 'codiseno') {
+        setOpacity(codiseno, '1');
+        setOpacity(cocreacion, '0.22');
+        setOpacity(coevaluacion, '0.22');
+      } else if (dim === 'cocreacion') {
+        setOpacity(codiseno, '0.22');
+        setOpacity(cocreacion, '1');
+        setOpacity(coevaluacion, '0.22');
+      } else if (dim === 'coevaluacion') {
+        setOpacity(codiseno, '0.22');
+        setOpacity(cocreacion, '0.22');
+        setOpacity(coevaluacion, '1');
+      }
+    }
+
+    function selectSector(sectorId) {
+      filterDimension('all');
+      const allCards = document.querySelectorAll('[id^="card-"]');
+      allCards.forEach(c => {
+        c.classList.remove('ring-4', 'ring-sky-500', 'scale-[1.02]');
+      });
+      const target = document.getElementById('card-' + sectorId);
+      if (target) {
+        target.classList.add('ring-4', 'ring-sky-500', 'scale-[1.02]');
+        target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function downloadHighResPNG() {
+      const svgElement = document.getElementById('taxonomic-wheel-svg');
+      const serializer = new XMLSerializer();
+      let svgString = serializer.serializeToString(svgElement);
+
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const URLObj = window.URL || window.webkitURL || window;
+      const blobURL = URLObj.createObjectURL(svgBlob);
+
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = 2400;
+        canvas.height = 2340;
+        const context = canvas.getContext('2d');
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        URLObj.revokeObjectURL(blobURL);
+
+        const link = document.createElement('a');
+        link.download = 'Rueda_Taxonomica_Cocreacion_IA_Cordero_2026.png';
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+      image.src = blobURL;
+    }
+  </script>
+</body>
+</html>
